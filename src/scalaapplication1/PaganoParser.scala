@@ -10,6 +10,8 @@ import scala.util.parsing.combinator._
 
 class PaganoParser extends JavaTokenParsers{
 
+  //override val whiteSpace = "(/*.*/)|(//.\\n)|\\t|".r
+  override val whiteSpace = """(\s|//.*|(?m)/\*(\*(?!/)|[^*])*\*/)+""".r
   //var tree : Node[String]
   /*def obj: Parser[Map[String, Any]] =
     "{"~> repsep(member, ",") <~"}" ^^ (Map() ++ _)
@@ -75,10 +77,11 @@ class PaganoParser extends JavaTokenParsers{
   def control: Parser[AbstractSyntaxTree[String]] =
     ( "if"~"("~expr~")"~block~opt("else"~>block) | "while"~"("~expr~")"~block ) ^^
     {
+      case "if"~"("~expr~")"~block1~Some(block2) => Node("if-else", List(expr.asInstanceOf[AbstractSyntaxTree[String]], block1.asInstanceOf[AbstractSyntaxTree[String]], block2.asInstanceOf[AbstractSyntaxTree[String]]) )
       case "if"~"("~expr~")"~block~None => 
         Node("if", List(expr.asInstanceOf[AbstractSyntaxTree[String]], block.asInstanceOf[AbstractSyntaxTree[String]] ) )
         //else Node("if-else", List(expr.asInstanceOf[AbstractSyntaxTree[String]], block1.asInstanceOf[AbstractSyntaxTree[String]], block2.asInstanceOf[AbstractSyntaxTree[String]]) )
-      case "if"~"("~expr~")"~block1~"else"~block2 => Node("if-else", List(expr.asInstanceOf[AbstractSyntaxTree[String]], block1.asInstanceOf[AbstractSyntaxTree[String]], block2.asInstanceOf[AbstractSyntaxTree[String]]) )
+      //case "if"~"("~expr~")"~block1~"else"~block2 => Node("if-else", List(expr.asInstanceOf[AbstractSyntaxTree[String]], block1.asInstanceOf[AbstractSyntaxTree[String]], block2.asInstanceOf[AbstractSyntaxTree[String]]) )
       case "while"~"("~expr~")"~block => Node("while", List(expr.asInstanceOf[AbstractSyntaxTree[String]], block.asInstanceOf[AbstractSyntaxTree[String]]))
     }
   
@@ -112,12 +115,12 @@ class PaganoParser extends JavaTokenParsers{
         if(e.toString != "")Node(e, Node(elem.toString, List(expr.asInstanceOf[AbstractSyntaxTree[String]])) :: l )
         else Node(elem.toString, List(expr.asInstanceOf[AbstractSyntaxTree[String]]))
       //case expr1~Leaf(elem)~expr2 => Node(elem.toString, List(expr1.asInstanceOf[AbstractSyntaxTree[String]], expr2.asInstanceOf[AbstractSyntaxTree[String]]))
-      case intconst~Node(e, l) => 
-        if(e.toString != "")Node(e, Leaf(intconst.toString) :: l)
-        else Leaf(intconst.toString)
-      case identifier~Node(e, l) => 
-        if(e.toString != "")Node(e, Leaf(identifier.toString) :: l)
-        else Leaf(identifier.toString)
+      /*case decimalNumber~Node(e, l) => 
+        if(e.toString != "")Node(e, Leaf(decimalNumber.toString) :: l)
+        else Leaf(intconst.toString)*/
+      case stringLiteral~Node(e, l) => 
+        if(e.toString != "")Node(e, Leaf(stringLiteral.toString) :: l)
+        else Leaf(stringLiteral.toString)
   }
   
   def binop_expr: Parser[AbstractSyntaxTree[String]] =
@@ -160,9 +163,10 @@ class PaganoParser extends JavaTokenParsers{
     }
   
   def identifier: Parser[String] =
-    "[A-Za-z][0-9A-Za-z]*".r
+    "els(?!e$)|whil(?!e$)|i(?!f$)|[A-Za-z][0-9A-Za-z]*".r
   
   def intconst: Parser[String] =
     "[0-9][0-9]*".r
+  
   
 }

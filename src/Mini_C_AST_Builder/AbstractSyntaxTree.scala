@@ -4,15 +4,16 @@
  * and open the template in the editor.
  */
 
-package scalaapplication1
+/*
+ * author: Nick F Pagano
+ */
+
+package Mini_C_AST_Builder
 
 abstract class AbstractSyntaxTree[+T]
   case class Leaf[T](elem: T) extends AbstractSyntaxTree[T]{
     override def toString: String = "("+elem+")"
   }
-  /*{
-    def content = elem
-  }*/
   case class Node[T](elem: T, children: List[AbstractSyntaxTree[T]]) extends AbstractSyntaxTree[T]{
     override def toString: String = {
       var str: String = "("+elem.toString
@@ -25,10 +26,4 @@ abstract class AbstractSyntaxTree[+T]
       str
     }
   }
-  /*{
-    children = List()
-    
-    def addToChildren(t: AbstractSyntaxTree[T])
-      this.children :: t
-  }*/
 

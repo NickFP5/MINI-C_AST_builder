@@ -24,20 +24,22 @@ object Main extends PaganoParser{
     val filenames = List("simple_if.txt", "simple_if_else.txt", 
                          "simple_while.txt", "test_file_1.txt",
                          "test_file_2.txt", "while_as_identifier_error.txt",
-                         "if_as_identifier_error.txt", "else_as_identifier_error.txt")
+                         "if_as_identifier_error.txt", "else_as_identifier_error.txt",
+                         "test_file_3.txt", "combined_expression_1.txt",
+                         "combined_expression_2.txt", "combined_expression_3.txt")
     
     for(filename <- filenames){
       var program_to_parse: String = ""
       println("\nTrying to parse file: " + filename)
-      try {
+      //try {
         for (line <- Source.fromFile(filename).getLines()) {
           program_to_parse += (line+"\n")
         }
         println("File content: " + program_to_parse)
         println(parseAll(program, program_to_parse ))
-      } catch {
+      /*} catch {
         case ex: Exception => println("A file exception happened.")
-      }
+      }*/
     }
   }
 

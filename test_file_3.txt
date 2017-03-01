@@ -1,0 +1,17 @@
+{
+    /* comment 1 */
+
+    var1 = 0;
+    var2 = 0;
+    i = 0;
+
+    /* comment 2 */
+    while(i < 10){
+        if(i % 2 == 0) var2 = var2 +i;
+        else{
+            var1 = var2*var1;
+            if(var1 > 100) var1 = 100; // comment 3
+            // comment 4
+        }
+    }
+}
